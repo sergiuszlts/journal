@@ -1,2 +1,2 @@
-# journal
-Journal application (node.js, express.js etc.)
+# Journal
+Journal application created using node.js, express.js etc.
