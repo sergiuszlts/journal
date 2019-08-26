@@ -8,10 +8,29 @@
     <% include ./elements/header.ejs %>
     <section id="content">
     <h2>Login</h2>
+    <form method="POST">
     Username:<br>
-    <input type="text"><br>
+    <% if (locals.username) { %>
+    <input type="text" name="username" value="<%= username %>"><br>
+    <% } else { %>
+    <input type="text" name="username"><br>
+    <% } %>
+    <% if (locals.usernameErrors){ %>
+    <span style="color: red"><%= usernameErrors %></span>
+    <br>
+    <% } %>
     Password:<br>
-    <input type="password">
+    <% if (locals.username) { %>
+    <input type="text" name="password" value="<%= password %>"><br>
+    <% } else { %>
+    <input type="text" name="password"><br>
+    <% } %>
+    <% if (locals.passwordErrors){ %>
+    <span style="color: red"><%= passwordErrors %></span>
+    <br>
+    <% } %>
+    <input type="submit" value="Login">
+    </form>
     </section>
     <div style="clear: both"></div>
 </body>

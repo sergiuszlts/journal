@@ -1,9 +1,14 @@
 const express = require('express');
 const path = require("path");
 const fs = require("fs");
+const bodyParser = require('body-parser');
+const Validator = require('./classes/Validator');
 
 const app = express();
 const PORT = 3000;
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -20,6 +25,23 @@ fs.readdirSync(routesPath).forEach(
     if (route != "index.js") app.get("/" + route.split(".")[0], require("./routes/" + route));
   });
 
+//special routes
+
+app.post('/login', (req, res) => {
+  let validator = new Validator();
+  validator.set(req.body.username);
+  validator.minLength(4);
+  validator.maxLength(30);
+  let usernameErrors = validator.errors;
+  validator.set(req.body.password);
+  validator.minLength(8);
+  validator.maxLength(50);
+  let passwordErrors = validator.errors;
+  if (!usernameErrors && !passwordErrors) {
+    console.log("OK!");
+  }
+  else res.render('login', {username: req.body.username, password: req.body.password, usernameErrors: usernameErrors, passwordErrors: passwordErrors});
+});
 
 
 
