@@ -43,6 +43,37 @@ app.post('/login', (req, res) => {
   else res.render('login', {username: req.body.username, password: req.body.password, usernameErrors: usernameErrors, passwordErrors: passwordErrors});
 });
 
+app.post('/register', (req, res) => {
+  let validator = new Validator();
+  validator.set(req.body.username);
+  validator.minLength(4);
+  validator.maxLength(30);
+  let usernameErrors = validator.errors;
+  validator.set(req.body.password);
+  validator.minLength(8);
+  validator.maxLength(50);
+  let passwordErrors = validator.errors;
+  validator.set(req.body.email);
+  validator.minLength(5);
+  validator.maxLength(40);
+  validator.isEmail();
+  let emailErrors = validator.errors;
+  validator.set(req.body.passwordRepeat);
+  validator.passwordEqual(req.body.password);
+  let passwordRepeatErrors = validator.errors;
+  if (!usernameErrors && !passwordErrors && !emailErrors && !passwordRepeatErrors) {
+    console.log("OK!");
+  }
+  else res.render('register', {
+    username: req.body.username, 
+    password: req.body.password, 
+    email: req.body.email,
+    usernameErrors: usernameErrors, 
+    passwordErrors: passwordErrors,
+    emailErrors: emailErrors,
+    passwordRepeatErrors: passwordRepeatErrors
+  });
+});
 
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));

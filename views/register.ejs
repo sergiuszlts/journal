@@ -7,8 +7,18 @@
 <body>
     <% include ./elements/header.ejs %>
     <section id="content">
-    <h2>Login</h2>
+    <h2>Register</h2>
     <form method="POST">
+    Email:<br>
+    <% if (locals.email) { %>
+    <input type="text" name="email" value="<%= email %>"><br>
+    <% } else { %>
+    <input type="text" name="email"><br>
+    <% } %>
+    <% if (locals.emailErrors){ %>
+    <span style="color: red"><%= emailErrors %></span>
+    <br>
+    <% } %>
     Username:<br>
     <% if (locals.username) { %>
     <input type="text" name="username" value="<%= username %>"><br>
@@ -29,7 +39,13 @@
     <span style="color: red"><%= passwordErrors %></span>
     <br>
     <% } %>
-    <input type="submit" value="Login">
+    Confirm password:<br>
+    <input type="password" name="passwordRepeat"><br>
+    <% if (locals.passwordRepeatErrors){ %>
+    <span style="color: red"><%= passwordRepeatErrors %></span>
+    <br>
+    <% } %>
+    <input type="submit" value="Register">
     </form>
     </section>
     <div style="clear: both"></div>

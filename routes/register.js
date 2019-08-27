@@ -1,6 +1,6 @@
 function router(req, res)
 {
-    res.render('index', {title: "register"});
+    res.render('register');
 }
 
 module.exports = router;
