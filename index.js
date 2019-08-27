@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const bodyParser = require('body-parser');
 const Validator = require('./classes/Validator');
+const dbClass = require('./classes/DB');
 
 const app = express();
 const PORT = 3000;
@@ -12,6 +13,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+
+//mongo
+
+const MongoClient = require('mongodb').MongoClient;
+const url = "mongodb://localhost:27017/";
+const DB = new dbClass(MongoClient, url);
 
 //routes
 const indexRoute = require('./routes/index');
@@ -62,7 +69,14 @@ app.post('/register', (req, res) => {
   validator.passwordEqual(req.body.password);
   let passwordRepeatErrors = validator.errors;
   if (!usernameErrors && !passwordErrors && !emailErrors && !passwordRepeatErrors) {
-    console.log("OK!");
+    let obj = {
+      username: req.body.username,
+      password: req.body.password,
+      email: req.body.email
+    }
+    DB.addElement("journalusers", "journaluserid", obj, () => {
+      console.log("OK!");
+    });
   }
   else res.render('register', {
     username: req.body.username, 
