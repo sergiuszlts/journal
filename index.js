@@ -68,25 +68,30 @@ app.post('/register', (req, res) => {
   validator.set(req.body.passwordRepeat);
   validator.passwordEqual(req.body.password);
   let passwordRepeatErrors = validator.errors;
-  if (!usernameErrors && !passwordErrors && !emailErrors && !passwordRepeatErrors) {
-    let obj = {
-      username: req.body.username,
-      password: req.body.password,
-      email: req.body.email
+  DB.exists("journalusers", { "email": req.body.email }, (result) => { //callback to check if email is already used
+    if(result) emailErrors = "The email is already used"; //if there is email in database
+    if (!usernameErrors && !passwordErrors && !emailErrors && !passwordRepeatErrors) {
+      let obj = {
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email
+      }
+      DB.addElement("journalusers", "journaluserid", obj, () => {
+        console.log("OK!");
+      });
     }
-    DB.addElement("journalusers", "journaluserid", obj, () => {
-      console.log("OK!");
+    else res.render('register', {
+      username: req.body.username, 
+      password: req.body.password, 
+      email: req.body.email,
+      usernameErrors: usernameErrors, 
+      passwordErrors: passwordErrors,
+      emailErrors: emailErrors,
+      passwordRepeatErrors: passwordRepeatErrors
     });
-  }
-  else res.render('register', {
-    username: req.body.username, 
-    password: req.body.password, 
-    email: req.body.email,
-    usernameErrors: usernameErrors, 
-    passwordErrors: passwordErrors,
-    emailErrors: emailErrors,
-    passwordRepeatErrors: passwordRepeatErrors
+
   });
+
 });
 
 
