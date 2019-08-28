@@ -4,6 +4,8 @@ const fs = require("fs");
 const bodyParser = require('body-parser');
 const Validator = require('./classes/Validator');
 const dbClass = require('./classes/DB');
+const bcrypt = require('bcrypt');
+const saltRounds = 15;
 
 const app = express();
 const PORT = 3000;
@@ -36,18 +38,18 @@ fs.readdirSync(routesPath).forEach(
 
 app.post('/login', (req, res) => {
   let validator = new Validator();
-  validator.set(req.body.username);
+  validator.set(req.body.email);
   validator.minLength(4);
   validator.maxLength(30);
-  let usernameErrors = validator.errors;
+  let emailErrors = validator.errors;
   validator.set(req.body.password);
   validator.minLength(8);
   validator.maxLength(50);
   let passwordErrors = validator.errors;
-  if (!usernameErrors && !passwordErrors) {
+  if (!emailErrors && !passwordErrors) {
     console.log("OK!");
   }
-  else res.render('login', {username: req.body.username, password: req.body.password, usernameErrors: usernameErrors, passwordErrors: passwordErrors});
+  else res.render('login', {email: req.body.email, password: req.body.password, emailErrors: emailErrors, passwordErrors: passwordErrors});
 });
 
 app.post('/register', (req, res) => {
@@ -73,11 +75,11 @@ app.post('/register', (req, res) => {
     if (!usernameErrors && !passwordErrors && !emailErrors && !passwordRepeatErrors) {
       let obj = {
         username: req.body.username,
-        password: req.body.password,
+        password: bcrypt.hashSync(req.body.password, saltRounds),
         email: req.body.email
       }
       DB.addElement("journalusers", "journaluserid", obj, () => {
-        console.log("OK!");
+        res.render('login', {message: "Registration successful, you can log in to your new account", email: req.body.email});
       });
     }
     else res.render('register', {

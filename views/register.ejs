@@ -8,7 +8,7 @@
     <% include ./elements/header.ejs %>
     <section id="content">
     <h2>Register</h2>
-    <form method="POST">
+    <form method="POST" action="/register">
     Email:<br>
     <% if (locals.email) { %>
     <input type="text" name="email" value="<%= email %>"><br>
@@ -30,7 +30,7 @@
     <br>
     <% } %>
     Password:<br>
-    <% if (locals.username) { %>
+    <% if (locals.password) { %>
     <input type="password" name="password" value="<%= password %>"><br>
     <% } else { %>
     <input type="password" name="password"><br>

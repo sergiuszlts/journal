@@ -8,19 +8,22 @@
     <% include ./elements/header.ejs %>
     <section id="content">
     <h2>Login</h2>
-    <form method="POST">
-    Username:<br>
-    <% if (locals.username) { %>
-    <input type="text" name="username" value="<%= username %>"><br>
-    <% } else { %>
-    <input type="text" name="username"><br>
+    <% if (locals.message) { %>
+    <span style="color: green"><%= message %></span>
     <% } %>
-    <% if (locals.usernameErrors){ %>
-    <span style="color: red"><%= usernameErrors %></span>
+    <form method="POST" action="/login">
+    Email:<br>
+    <% if (locals.email) { %>
+    <input type="text" name="email" value="<%= email %>"><br>
+    <% } else { %>
+    <input type="text" name="email"><br>
+    <% } %>
+    <% if (locals.emailErrors){ %>
+    <span style="color: red"><%= emailErrors %></span>
     <br>
     <% } %>
     Password:<br>
-    <% if (locals.username) { %>
+    <% if (locals.password) { %>
     <input type="password" name="password" value="<%= password %>"><br>
     <% } else { %>
     <input type="password" name="password"><br>
