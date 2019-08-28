@@ -19,6 +19,13 @@
                 <br><span style="color: green"><%= message %></span><br>
             <% } %>
     </section>
+    <% if (locals.posts) { %>
+    <div class="posts">
+        <% posts.forEach(function(post) { %>
+            <li><%= post.text %> - <%= post.time %></li>
+        <% }); %>
+    </div>
+    <% } %>
     <div style="clear: both"></div>
 </body>
 </html>

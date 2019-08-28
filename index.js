@@ -143,6 +143,15 @@ app.post('/newentry', (req, res) => {
 
 });
 
+app.get('/journal', (req, res) =>{
+  if(req.session.username && req.session.email && req.session.userId){
+    DB.findAll("journal", {userId: req.session.userId}, (result) => {
+      if(result.length > 0) res.render('journal', {posts: result});
+      else res.render('journal');
+    });
+  }
+  else res.redirect('/'); 
+});
 
 app.get('/logout', (req, res) => {
   req.session.destroy((error) => {

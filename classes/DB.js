@@ -50,6 +50,17 @@ class DB {
             });
         });
     }
+    findAll(collectionName, query, callback)
+    {
+        this.MongoClient.connect(this.url, (err, db) => {
+            if (err) throw err;
+            let dbo = db.db(this.dbName);
+            dbo.collection(collectionName).find(query).toArray((err, results) => {
+                if(err) console.log(err);
+                else callback(results);
+            });
+        });
+    }
     exists(collectionName, query, callback)
     {
         return this.find(collectionName, query, callback) ? 1 : 0;
