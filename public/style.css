@@ -111,6 +111,15 @@ input[type=text],input[type=password]
   text-align: center;
 }
 
+textarea {
+  width: 90%;
+  height: 200px;
+  resize: none;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
 @media (max-width: 550px) {
     li{
         display: block;

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ./elements/config.ejs %>
+    <title>Journal</title>
+</head>
+<body>
+    <% include ./elements/header.ejs %>
+    <section id="content">
+            <a>Type something:</a>
+            <form action="newentry" method="post">
+                <textarea id="source" name="source">qwe</textarea>
+                <input type="submit" value="Add new entry">
+            </form>
+            <% if (locals.errors){ %>
+                <br><span style="color: red"><%= errors %></span><br>
+            <% } %>
+            <% if (locals.message){ %>
+                <br><span style="color: green"><%= message %></span><br>
+            <% } %>
+    </section>
+    <div style="clear: both"></div>
+</body>
+</html>

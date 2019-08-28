@@ -12,6 +12,11 @@ const session = require('express-session')
 const app = express();
 const PORT = 3000;
 
+function currentTime()
+{
+  let date = new Date();
+  return date.toLocaleDateString()+" "+date.toLocaleTimeString();
+}
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({'secret': 'anything123', 'resave' : true, 'saveUninitialized': true}));
@@ -24,6 +29,7 @@ app.use(function(req, res, next) {
   {
     res.locals.user.username = req.session.username ? req.session.username : null;
     res.locals.user.email = req.session.email ? req.session.email : null;
+    res.locals.user.userId = req.session.userId ? req.session.userId : null;
   }
 
   next();
@@ -58,6 +64,7 @@ app.post('/login', (req, res) => {
       console.log("Logged in");
       req.session.email = result.email;
       req.session.username = result.username;
+      req.session.userId = result.id;
       res.redirect('/');
     }
     else res.render('login', {email: req.body.email, password: req.body.password, errors: errors});
@@ -105,6 +112,34 @@ app.post('/register', (req, res) => {
     });
 
   });
+
+});
+
+
+
+
+app.post('/newentry', (req, res) => {
+
+  if(req.session.username && req.session.email && req.session.id)
+  {
+    let validator = new Validator();
+    validator.set(req.body.source);
+    validator.minLength(30);
+    validator.maxLength(1000);
+    let errors = validator.errors;
+    if (!errors) {
+      let obj = {
+        userId: req.session.userId,
+        time: currentTime(),
+        text: req.body.source
+      };
+      DB.addElement("journal", "journalid", obj, () => {
+        res.render('journal', {message: "New entry added"});
+      });
+    }
+    else res.render('journal', {errors: errors});
+  }
+  else res.redirect("/");
 
 });
 
