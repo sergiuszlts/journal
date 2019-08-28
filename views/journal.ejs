@@ -9,7 +9,7 @@
     <section id="content">
             <a>Type something:</a>
             <form action="newentry" method="post">
-                <textarea id="source" name="source">qwe</textarea>
+                <textarea id="source" name="source"></textarea>
                 <input type="submit" value="Add new entry">
             </form>
             <% if (locals.errors){ %>
@@ -18,14 +18,17 @@
             <% if (locals.message){ %>
                 <br><span style="color: green"><%= message %></span><br>
             <% } %>
+            <% if (locals.posts) { %>
+                <div class="posts">
+                    <% posts.forEach(function(post) { %>
+                        <div class="post">
+                        <div class="time"><%= post.time %></div>
+                        <div class="text"><%= post.text %></div>
+                        </div>
+                    <% }); %>
+                </div>
+                <% } %>
     </section>
-    <% if (locals.posts) { %>
-    <div class="posts">
-        <% posts.forEach(function(post) { %>
-            <li><%= post.text %> - <%= post.time %></li>
-        <% }); %>
-    </div>
-    <% } %>
     <div style="clear: both"></div>
 </body>
 </html>

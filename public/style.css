@@ -119,7 +119,26 @@ textarea {
   margin-right: auto;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-
+.posts{
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.post{
+  background-color: #dfe8ec;
+  margin-bottom: 5px;
+  text-align: justify;
+  min-height: 70px;
+}
+.text{
+  padding: 10px;
+}
+.time{
+text-align: right;
+background-color: #187cab;
+padding: 10px;
+color: white;
+}
 @media (max-width: 550px) {
     li{
         display: block;
