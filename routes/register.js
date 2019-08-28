@@ -1,6 +1,7 @@
 function router(req, res)
 {
-    res.render('register');
+    if(req.session.username || req.session.email) res.redirect('/'); 
+    else res.render('register');
 }
 
 module.exports = router;

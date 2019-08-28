@@ -1,6 +1,7 @@
 function router(req, res)
 {
-    res.render('login');
+    if(req.session.username || req.session.email) res.redirect('/'); 
+    else res.render('login');
 }
 
 module.exports = router;
