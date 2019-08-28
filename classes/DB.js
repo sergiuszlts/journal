@@ -38,18 +38,21 @@ class DB {
             });
         });
     }
-    exists(collectionName, query, callback)
+    find(collectionName, query, callback)
     {
         this.MongoClient.connect(this.url, (err, db) => {
             if (err) throw err;
             let dbo = db.db(this.dbName);
             dbo.collection(collectionName).findOne(query, (err, result) => {
                 if (err) throw err;
-                let res = result ? 1 : 0;
                 db.close();
-                if(callback) callback(res);
+                if(callback) callback(result);
             });
         });
+    }
+    exists(collectionName, query, callback)
+    {
+        return this.find(collectionName, query, callback) ? 1 : 0;
     }
 }
 

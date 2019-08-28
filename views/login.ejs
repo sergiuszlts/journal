@@ -18,21 +18,17 @@
     <% } else { %>
     <input type="text" name="email"><br>
     <% } %>
-    <% if (locals.emailErrors){ %>
-    <span style="color: red"><%= emailErrors %></span>
-    <br>
-    <% } %>
     Password:<br>
     <% if (locals.password) { %>
     <input type="password" name="password" value="<%= password %>"><br>
     <% } else { %>
     <input type="password" name="password"><br>
     <% } %>
-    <% if (locals.passwordErrors){ %>
-    <span style="color: red"><%= passwordErrors %></span>
-    <br>
-    <% } %>
     <input type="submit" value="Login">
+    <% if (locals.errors){ %>
+        <br><span style="color: red"><%= errors %></span>
+        <br>
+    <% } %>
     </form>
     </section>
     <div style="clear: both"></div>

@@ -37,19 +37,15 @@ fs.readdirSync(routesPath).forEach(
 //special routes
 
 app.post('/login', (req, res) => {
-  let validator = new Validator();
-  validator.set(req.body.email);
-  validator.minLength(4);
-  validator.maxLength(30);
-  let emailErrors = validator.errors;
-  validator.set(req.body.password);
-  validator.minLength(8);
-  validator.maxLength(50);
-  let passwordErrors = validator.errors;
-  if (!emailErrors && !passwordErrors) {
-    console.log("OK!");
-  }
-  else res.render('login', {email: req.body.email, password: req.body.password, emailErrors: emailErrors, passwordErrors: passwordErrors});
+  DB.find("journalusers", {email: req.body.email}, (result) => {
+    let errors = null;
+    if(!result) errors = "Incorrect data";
+    else if(!bcrypt.compareSync(req.body.password, result.password)) errors = "Wrong password";
+    if (!errors) {
+      console.log("OK!");
+    }
+    else res.render('login', {email: req.body.email, password: req.body.password, errors: errors});
+  });
 });
 
 app.post('/register', (req, res) => {
