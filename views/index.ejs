@@ -9,7 +9,13 @@
     <section id="content">
             <% if(locals.title){ %>
                 <h2><%= title %></h2>
-                <% } %>
+            <% } %>
+            <% if(locals.user.username){ %>
+                <h2><%= user.username %></h2>
+            <% } %>
+            <% if(locals.user.email){ %>
+                <h2><%= user.email %></h2>
+            <% } %>
     </section>
     <div style="clear: both"></div>
 </body>

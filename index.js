@@ -7,14 +7,27 @@ const dbClass = require('./classes/DB');
 const bcrypt = require('bcrypt');
 const saltRounds = 15;
 
+const session = require('express-session')
+
 const app = express();
 const PORT = 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(session({'secret': 'anything123', 'resave' : true, 'saveUninitialized': true}));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+
+app.use(function(req, res, next) {
+  res.locals.user = {};
+  if(req.session.username && req.session.email)
+  {
+    res.locals.user.username = req.session.username ? req.session.username : null;
+    res.locals.user.email = req.session.email ? req.session.email : null;
+  }
+
+  next();
+});
 
 //mongo
 
@@ -42,7 +55,10 @@ app.post('/login', (req, res) => {
     if(!result) errors = "Incorrect data";
     else if(!bcrypt.compareSync(req.body.password, result.password)) errors = "Wrong password";
     if (!errors) {
-      console.log("OK!");
+      console.log("Logged in");
+      req.session.email = result.email;
+      req.session.username = result.username;
+      res.redirect('/');
     }
     else res.render('login', {email: req.body.email, password: req.body.password, errors: errors});
   });
@@ -93,4 +109,10 @@ app.post('/register', (req, res) => {
 });
 
 
+app.get('/logout', (req, res) => {
+  req.session.destroy((error) => {
+    if(error) return error;
+    res.redirect('/');
+  });
+});
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));

@@ -2,10 +2,13 @@
         <div id="logo"><a href="/">Journal</a></div>
         <nav>
             <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/register">Register</a></li>
-                    <li><a href="/">More</a></li>
+                    <li><a href="/">Home</a></li>   
+                    <% if(locals.user.username || locals.user.username){ %>
+                        <li><a href="/logout">Log out</a></li>
+                    <% } else { %>
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                    <% } %>
             </ul>
         </nav>
     </header>
