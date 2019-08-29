@@ -134,10 +134,10 @@ app.post('/newentry', (req, res) => {
         text: req.body.source
       };
       DB.addElement("journal", "journalid", obj, () => {
-        res.render('journal', {message: "New entry added"});
+        res.redirect('journal/?msg=added');
       });
     }
-    else res.render('journal', {errors: errors});
+    else res.redirect(`journal/?err=${errors}`);
   }
   else res.redirect("/");
 
@@ -146,8 +146,12 @@ app.post('/newentry', (req, res) => {
 app.get('/journal', (req, res) =>{
   if(req.session.username && req.session.email && req.session.userId){
     DB.findAll("journal", {userId: req.session.userId}, (result) => {
-      if(result.length > 0) res.render('journal', {posts: result.reverse()});
-      else res.render('journal');
+      let query = {};
+      if(req.query.err) query.errors = req.query.err;
+      if(req.query.msg == "removed") query.message = "Entry removed";
+      else if(req.query.msg == "added") query.message = "New entry added";
+      if(result.length > 0) query.posts = result.reverse();
+      res.render('journal', query);
     });
   }
   else res.redirect('/'); 
@@ -159,4 +163,27 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
   });
 });
+
+app.get('/remove/:id', (req, res) => {
+    if(req.session.username && req.session.email && req.session.userId) //if logged in
+    {
+      let id = parseInt(req.params.id);
+      if(id) //if id is int
+      {
+        DB.find("journal", {id: id}, (result) => {
+          if(result.userId == req.session.userId) //if user has permission to delete
+          {
+            DB.remove("journal", result, (results) => {
+              res.redirect('/journal/?msg=removed');
+            });
+          }
+        });
+      }
+      else res.redirect('/');
+    }
+    else {
+      res.redirect('/');
+    }
+});
+
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));

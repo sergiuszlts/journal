@@ -65,6 +65,19 @@ class DB {
     {
         return this.find(collectionName, query, callback) ? 1 : 0;
     }
+
+    remove(collectionName, query, callback)
+    {
+        this.MongoClient.connect(this.url, (err, db) => {
+            if (err) throw err;
+            let dbo = db.db(this.dbName);
+            dbo.collection(collectionName).remove(query, (err, result) => {
+                if (err) throw err;
+                db.close();
+                if(callback) callback(result);
+            });
+        });
+    }
 }
 
 

@@ -123,21 +123,37 @@ textarea {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 10px;
 }
 .post{
   background-color: #dfe8ec;
   margin-bottom: 5px;
   text-align: justify;
   min-height: 70px;
+  overflow: hidden;
 }
 .text{
   padding: 10px;
 }
 .time{
-text-align: right;
+text-align: left;
 background-color: #187cab;
 padding: 10px;
 color: white;
+}
+
+.deleteform{
+  float: right;
+}
+.deleteform input[type=submit]{
+  padding: 0px;
+  margin: 0;
+  border: none;
+  background-color: transparent;
+  color: white;
+}
+.deleteform input[type=submit]:hover{
+  color: rgb(233, 233, 233);
 }
 @media (max-width: 550px) {
     li{

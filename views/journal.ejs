@@ -8,7 +8,7 @@
     <% include ./elements/header.ejs %>
     <section id="content">
             <a>Type something:</a>
-            <form action="newentry" method="post">
+            <form action="/newentry" method="post">
                 <textarea id="source" name="source"></textarea>
                 <input type="submit" value="Add new entry">
             </form>
@@ -22,7 +22,7 @@
                 <div class="posts">
                     <% posts.forEach(function(post) { %>
                         <div class="post">
-                        <div class="time"><%= post.time %></div>
+                        <div class="time"><%= post.time %> <form class="deleteform" method="get" action="/remove/<%= post.id %>"><input type="submit" class="delete" value="Delete"></form></div>
                         <div class="text"><%= post.text %></div>
                         </div>
                     <% }); %>
