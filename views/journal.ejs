@@ -22,8 +22,13 @@
                 <div class="posts">
                     <% posts.forEach(function(post) { %>
                         <div class="post">
-                        <div class="time"><%= post.time %> <form class="deleteform" method="get" action="/remove/<%= post.id %>"><input type="submit" class="delete" value="Delete"></form></div>
-                        <div class="text"><%= post.text %></div>
+                        <div class="bar">
+                            <%= post.time %>
+                            <form class="deleteform" method="get" action="/remove/<%= post.id %>"><input type="submit" class="delete" value="Delete"></form>
+                            <div class="edit" onclick="edit('<%= post.id %>')">Edit</div>
+                        </div>
+                        <div style="clear: both;"></div>
+                        <div class="text" id="<%= post.id %>"><%= post.text %></div>
                         </div>
                     <% }); %>
                 </div>
@@ -32,3 +37,26 @@
     <div style="clear: both"></div>
 </body>
 </html>
+<script>
+let editing = [];
+let tmp = [];
+function edit(id)
+{
+    if(editing.includes(id))
+    {
+        editing.pop(editing.indexOf(id));
+        document.getElementById(id).innerHTML = tmp[id];
+        tmp[id] = "";        
+    }
+    else{
+        editing.push(id);
+        let text = document.getElementById(id).innerHTML;
+        tmp[id] = text;
+        document.getElementById(id).innerHTML = `<form action="/editentry/${id}" method="post">
+                <textarea name="source">${text}</textarea>
+                <br><input type="submit" value="Edit entry">
+            </form>`;
+    }
+
+}
+</script>

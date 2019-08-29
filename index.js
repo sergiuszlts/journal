@@ -143,6 +143,36 @@ app.post('/newentry', (req, res) => {
 
 });
 
+app.post('/editentry/:id', (req, res) => {
+  if(req.session.username && req.session.email && req.session.userId) //if logged in
+  {
+    let id = parseInt(req.params.id);
+    if(id) //if id is int
+    {
+      let validator = new Validator();
+      validator.set(req.body.source);
+      validator.minLength(30);
+      validator.maxLength(1000);
+      let errors = validator.errors;
+      if(errors) res.redirect('/journal/?err='+errors);
+      else{
+        DB.find("journal", {id: id}, (result) => {
+          if(result.userId == req.session.userId) //if user has permission to change
+          {
+            DB.edit("journal", result, {text: req.body.source}, (results) => {
+              res.redirect('/journal/?msg=edited');
+            });
+          }
+        });
+      }
+    }
+    else res.redirect('/');
+  }
+  else {
+    res.redirect('/');
+  }
+});
+
 app.get('/journal', (req, res) =>{
   if(req.session.username && req.session.email && req.session.userId){
     DB.findAll("journal", {userId: req.session.userId}, (result) => {
@@ -150,6 +180,7 @@ app.get('/journal', (req, res) =>{
       if(req.query.err) query.errors = req.query.err;
       if(req.query.msg == "removed") query.message = "Entry removed";
       else if(req.query.msg == "added") query.message = "New entry added";
+      else if(req.query.msg == "edited") query.message = "Entry edited";
       if(result.length > 0) query.posts = result.reverse();
       res.render('journal', query);
     });

@@ -78,6 +78,18 @@ class DB {
             });
         });
     }
+    edit(collectionName, query, edition, callback)
+    {
+        this.MongoClient.connect(this.url, (err, db) => {
+            if (err) throw err;
+            let dbo = db.db(this.dbName);
+            dbo.collection(collectionName).findOneAndUpdate(query, {$set: edition}, (err, result) => {
+                if (err) throw err;
+                db.close();
+                if(callback) callback(result);
+            });
+        });
+    }
 }
 
 
