@@ -1,4 +1,4 @@
-function editentry(req, res, DB, Validator) {
+function editentry(req, res, DB, Validator, isLoggedIn) {
     if (isLoggedIn(req)) //if logged in
     {
         let id = parseInt(req.params.id);

@@ -15,7 +15,6 @@ const isLoggedIn = require('./functions/isLoggedIn'); //check if user is logged 
 const app = express();
 const PORT = 3000;
 
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({ 'secret': 'something', 'resave': true, 'saveUninitialized': true })); //session settings
@@ -67,12 +66,12 @@ const routeRemove = require('./routes/get/remove');
 
 //login to the site
 app.post('/login', (req, res) => {
-  routeLogin(req, res, DB, bcrypt);
+  routeLogin(req, res, DB, bcrypt, isLoggedIn);
 });
 
 //registration of a new account
 app.post('/register', (req, res) => {
-  routeRegister(req, res, DB, bcrypt, validator);
+  routeRegister(req, res, DB, bcrypt, Validator, isLoggedIn);
 });
 
 //add new entry to the journal
@@ -82,51 +81,21 @@ app.post('/newentry', (req, res) => {
 
 //edit an existing journal entry
 app.post('/editentry/:id', (req, res) => {
-  routeEditentry(req, res, DB, Validator);
+  routeEditentry(req, res, DB, Validator, isLoggedIn);
 });
 
+//show journal with all entries of the given user
 app.get('/journal', (req, res) => {
-  if (isLoggedIn(req)) {
-    DB.findAll("journal", { userId: req.session.userId }, (result) => {
-      let query = {};
-      if (req.query.err) query.errors = req.query.err;
-      if (req.query.msg == "removed") query.message = "Entry removed";
-      else if (req.query.msg == "added") query.message = "New entry added";
-      else if (req.query.msg == "edited") query.message = "Entry edited";
-      if (result.length > 0) query.posts = result.reverse();
-      res.render('journal', query);
-    });
-  }
-  else res.redirect('/');
+  routeJournal(req, res, DB, isLoggedIn);
 });
 
 app.get('/logout', (req, res) => {
-  req.session.destroy((error) => {
-    if (error) return error;
-    res.redirect('/');
-  });
+  routeLogout(req, res);
 });
 
+//delete the entry with the given id
 app.get('/remove/:id', (req, res) => {
-  if (isLoggedIn(req)) //if logged in
-  {
-    let id = parseInt(req.params.id);
-    if (id) //if id is int
-    {
-      DB.find("journal", { id: id }, (result) => {
-        if (result.userId == req.session.userId) //if user has permission to delete
-        {
-          DB.remove("journal", result, (results) => {
-            res.redirect('/journal/?msg=removed');
-          });
-        }
-      });
-    }
-    else res.redirect('/');
-  }
-  else {
-    res.redirect('/');
-  }
+  routeRemove(req, res, DB, isLoggedIn);
 });
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
