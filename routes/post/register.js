@@ -1,4 +1,4 @@
-function register(req, res, DB, bcrypt, Validator, isLoggedIn) {
+function register(req, res, DB, bcrypt, saltRounds, Validator, isLoggedIn) {
     if (isLoggedIn(req)) res.redirect('/');
     else {
         let validator = new Validator();

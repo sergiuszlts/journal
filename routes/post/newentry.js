@@ -1,4 +1,4 @@
-function newentry(req, res, DB, Validator, isLoggedIn) {
+function newentry(req, res, DB, Validator, isLoggedIn, currentTime) {
     if (isLoggedIn(req)) {
         let validator = new Validator();
         validator.set(req.body.source);

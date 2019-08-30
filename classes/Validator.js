@@ -14,11 +14,11 @@ class Validator {
     }
     isEmail()
     {
-        if(!(this.element.includes(".") && this.element.includes("@"))) this.errors = "Invalid email"
+        if(!(this.element.includes(".") && this.element.includes("@"))) this.errors = "Invalid email";
     }
     passwordEqual(password)
     {
-        if(this.element !== password) this.errors = "Password doesn't match"
+        if(this.element !== password) this.errors = "Password doesn't match";
     }
 }
 

@@ -1,9 +1,10 @@
 class DB {
-    constructor(MongoClient, url, counterUsers) {
+    constructor(MongoClient, url) {
         this.MongoClient = MongoClient;
         this.url = url;
         this.dbName = "mydb";
     }
+
     NextCounterValue(sequenceName, callback = null) {
         this.MongoClient.connect(this.url, (err, db) => {
             if (err) throw err;
@@ -22,6 +23,7 @@ class DB {
                 });
         });
     }
+
     addElement(collectionName, counterColName, obj, callback) //journalusers, journaluserid
     {
         this.NextCounterValue(counterColName, (returnedId) => {
@@ -33,64 +35,66 @@ class DB {
                     if (err) throw err;
                     console.log("1 document inserted");
                     db.close();
-                    if(callback) callback();
+                    if (callback) callback();
                 });
             });
         });
     }
-    find(collectionName, query, callback)
-    {
+
+    find(collectionName, query, callback) {
         this.MongoClient.connect(this.url, (err, db) => {
             if (err) throw err;
             let dbo = db.db(this.dbName);
             dbo.collection(collectionName).findOne(query, (err, result) => {
                 if (err) throw err;
                 db.close();
-                if(callback) callback(result);
+                if (callback) callback(result);
+                return result;
             });
         });
     }
-    findAll(collectionName, query, callback)
-    {
+
+    findAll(collectionName, query, callback) {
         this.MongoClient.connect(this.url, (err, db) => {
             if (err) throw err;
             let dbo = db.db(this.dbName);
             dbo.collection(collectionName).find(query).toArray((err, results) => {
-                if(err) console.log(err);
-                else callback(results);
+                if (err) throw err;
+                db.close();
+                if (callback) callback(results);
+                return results;
             });
         });
     }
-    exists(collectionName, query, callback)
-    {
-        return this.find(collectionName, query, callback) ? 1 : 0;
-    }
 
-    remove(collectionName, query, callback)
-    {
+    remove(collectionName, query, callback) {
         this.MongoClient.connect(this.url, (err, db) => {
             if (err) throw err;
             let dbo = db.db(this.dbName);
             dbo.collection(collectionName).remove(query, (err, result) => {
                 if (err) throw err;
                 db.close();
-                if(callback) callback(result);
+                if (callback) callback(result);
             });
         });
     }
-    edit(collectionName, query, edition, callback)
-    {
+
+    edit(collectionName, query, edition, callback) {
         this.MongoClient.connect(this.url, (err, db) => {
             if (err) throw err;
             let dbo = db.db(this.dbName);
-            dbo.collection(collectionName).findOneAndUpdate(query, {$set: edition}, (err, result) => {
+            dbo.collection(collectionName).findOneAndUpdate(query, { $set: edition }, (err, result) => {
                 if (err) throw err;
                 db.close();
-                if(callback) callback(result);
+                if (callback) callback(result);
             });
         });
     }
-}
 
+    exists(collectionName, query, callback) {
+        return this.find(collectionName, query, callback) ? 1 : 0;
+    }
+
+}
 
 module.exports = DB;

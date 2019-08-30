@@ -71,12 +71,12 @@ app.post('/login', (req, res) => {
 
 //registration of a new account
 app.post('/register', (req, res) => {
-  routeRegister(req, res, DB, bcrypt, Validator, isLoggedIn);
+  routeRegister(req, res, DB, bcrypt, saltRounds, Validator, isLoggedIn);
 });
 
 //add new entry to the journal
 app.post('/newentry', (req, res) => {
-  routeNewentry(req, res, DB, Validator, isLoggedIn);
+  routeNewentry(req, res, DB, Validator, isLoggedIn, currentTime);
 });
 
 //edit an existing journal entry
